@@ -1,0 +1,72 @@
+import bpy
+
+def rename_bone_with_keyframes(armature_name, old_bone_name, new_bone_name):
+    # Get the armature object
+    armature = bpy.data.objects.get(armature_name)
+    
+    if not armature or armature.type != 'ARMATURE':
+        print(f"Armature '{armature_name}' not found.")
+        return
+
+    bpy.context.view_layer.objects.active = armature
+    
+    # Rename the bone in the armature data
+    bpy.ops.object.mode_set(mode='EDIT')
+    found = False
+    for bone in armature.data.edit_bones:
+        if bone.name == old_bone_name:
+            bone.name = new_bone_name
+            found = True
+            break
+    if found == False:
+        print(f"Bone '{old_bone_name}' not found in armature '{armature_name}'.")
+        return
+
+    # Adjust animation data to reflect the new bone name
+    for action in bpy.data.actions:
+        print(f"Action {action.name}")
+        for fcurve in action.fcurves:
+            if fcurve.data_path.startswith(f'pose.bones["{old_bone_name}"]'):
+                fcurve.data_path = fcurve.data_path.replace(f'pose.bones["{old_bone_name}"]', f'pose.bones["{new_bone_name}"]')
+                print(f"Updated fcurve data path to: {fcurve.data_path}")
+    
+    # Go back to object mode
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+# Example usage
+# Bone 이름 쌍 목록
+bone_name_changes = [
+    ('All_CT', 'All_ctr'),
+    ('Spine.001', 'Spine_001'),
+    ('Spine.002', 'Spine_002'),
+    ('Pole.R', 'Elbow_Pole.R'),
+    ('Pole.L', 'Elbow_Pole.L'),
+    ('UpperArm.R', 'Upperarm_001.R'),
+    ('UpperArm.L', 'Upperarm_001.L'),
+    ('LowerArm.R', 'Forearm_001.R'),
+    ('LowerArm.L', 'Forearm_001.L'),
+    ('Hand.R', 'Hand_ctr.R'),
+    ('Hand.L', 'Hand_ctr.L'),
+    ('Fing1.001.R', 'Finger_01_001.R'),
+    ('Fing1.002.R', 'Finger_01_002.R'),
+    ('Fing2.001.R', 'Finger_02_001.R'),
+    ('Fing2.002.R', 'Finger_02_002.R'),
+    ('Thumb001.R', 'Thumb_001.R'),
+    ('Thumb002.R', 'Thumb_002.R'),
+    ('Thumb003.R', 'Thumb_003.R'),
+    ('Fing1.001.L', 'Finger_01_001.L'),
+    ('Fing1.002.L', 'Finger_01_002.L'),
+    ('Fing2.001.L', 'Finger_02_001.L'),
+    ('Fing2.002.L', 'Finger_02_002.L'),
+    ('Thumb001.L', 'Thumb_001.L'),
+    ('Thumb002.L', 'Thumb_002.L'),
+    ('Thumb003.L', 'Thumb_003.L'),
+    ('FPole.R', 'Knee_Pole.R'),
+    ('FPole.L', 'Knee_Pole.L'),
+    ('Foot.R', 'Foot_ctr.R'),
+    ('Foot.L', 'Foot_ctr.L'),
+]
+
+# 각 Bone의 이름을 순차적으로 변경
+for old_bone_name, new_bone_name in bone_name_changes:
+    rename_bone_with_keyframes('Armature', old_bone_name, new_bone_name)

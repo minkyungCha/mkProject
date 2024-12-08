@@ -1,0 +1,78 @@
+import bpy
+from mathutils import Euler
+
+def get_or_create_fcurve(action, data_path, index, group_name):
+    """Get existing fcurve or create a new one if it doesn't exist."""
+    for fcurve in action.fcurves:
+        if fcurve.data_path == data_path and fcurve.array_index == index:
+            return fcurve
+    # Create new fcurve if not found
+    fcurve = action.fcurves.new(data_path=data_path, index=index)
+    fcurve.group = action.groups[group_name]
+    return fcurve
+
+# Bone 이름 목록
+bone_names = [
+    'All_CT',
+    # 추가...
+]
+
+# 현재 씬의 모든 오브젝트를 순회합니다.
+for obj in bpy.context.scene.objects:
+    if obj.type == 'ARMATURE':  # Armature 오브젝트만 처리
+        bpy.context.view_layer.objects.active = obj
+        for action in bpy.data.actions:
+            if obj.animation_data:
+                obj.animation_data.action = action
+
+            # fcurves을 순회하면서 rotation_euler 속성을 찾습니다.
+            euler_fcurves = [fcurve for fcurve in action.fcurves if fcurve.data_path.endswith("rotation_euler")]
+
+            # 변환된 키프레임을 추적합니다.
+            converted_keyframes = set()
+
+            # 각 fcurve에서 키프레임을 순회합니다.
+            for fcurve in euler_fcurves:
+                bone_name = fcurve.data_path.split('"')[1]
+                
+                # 본 이름이 목록에 있는지 확인
+                if bone_name not in bone_names:
+                    continue
+                
+                bpy.ops.object.mode_set(mode='POSE')
+                bone = obj.pose.bones[bone_name]
+                bone.rotation_mode = 'QUATERNION'
+
+                # bone의 각 키프레임을 순회합니다.
+                for keyframe in fcurve.keyframe_points:
+                    frame = keyframe.co.x
+                    converted_keyframes.add((bone_name, frame))
+
+                    # 해당 프레임에서 본의 Euler rotation 값을 가져옵니다.
+                    bpy.context.scene.frame_set(int(frame))
+                    euler_rotation = bone.rotation_euler.copy()
+
+                    # Euler rotation을 Quaternion으로 변환합니다.
+                    quaternion_rotation = euler_rotation.to_quaternion()
+
+                    # 새로운 fcurve 경로 생성
+                    new_data_path = fcurve.data_path.replace("rotation_euler", "rotation_quaternion")
+
+                    # 기존의 fcurve group을 가져옵니다.
+                    group_name = fcurve.group.name if fcurve.group else None
+
+                    # 각 quaternion component(w, x, y, z)에 대해 fcurve 추가
+                    for i, component in enumerate(['w', 'x', 'y', 'z']):
+                        quat_curve = get_or_create_fcurve(action, new_data_path, i, group_name)
+                        quat_curve.keyframe_points.insert(frame, getattr(quaternion_rotation, component))
+                    print(f"{action.name}-{frame} : Updated fcurve data ({fcurve.data_path}) path to -> {new_data_path} with value {quaternion_rotation}")
+
+            # 기존의 Euler 회전 fcurve를 삭제합니다.
+            for fcurve in euler_fcurves:
+                bone_name = fcurve.data_path.split('"')[1]
+                if all((bone_name, keyframe.co.x) in converted_keyframes for keyframe in fcurve.keyframe_points):
+                    action.fcurves.remove(fcurve)
+
+# 씬의 프레임을 초기 위치로 되돌립니다.
+bpy.context.scene.frame_set(0)
+bpy.ops.object.mode_set(mode='OBJECT')
