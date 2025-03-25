@@ -1,0 +1,6 @@
+
+1. Unpack the zip-files. Copy Files to your 3dsmax script directory. ie: D:\Autodesk\3ds Max 2011\Scripts
+
+2. Go to MAXScript>>Run Script... and select the file (SpringMagicMacro.ms)
+
+3. Find it under Customize>>Customize User Access Interface, Category 'Ysctool'.

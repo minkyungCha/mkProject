@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MaxHotkeyTransformations Locked="false">
+    <Assign_Hotkey Shortcut="1" Description="Set Free Key" Id="972555510-40142"/>
+    <Assign_Hotkey Shortcut="4" Description="Set Sliding Key" Id="972555510-40141"/>
+    <Assign_Hotkey Shortcut="3" Description="Set Planted Key" Id="972555510-40138"/>
+    <Assign_Hotkey Shortcut="Ctrl+I" Description="Select Opposite" Id="972555510-40189"/>
+    <Assign_Hotkey Shortcut="C" Description="Select Body Horizontal" Id="972555510-40019"/>
+    <Assign_Hotkey Shortcut="\" Description="Figure Mode" Id="972555510-40144"/>
+    <Assign_Hotkey Shortcut="B" Description="BoneToggle" Id="647394-BoneToggle`IllusionGarden"/>
+    <Assign_Hotkey Shortcut="Shift+B" Description="Bone Tools..." Id="647394-BoneAdjustmentTools`Animation Tools"/>
+    <Assign_Hotkey Shortcut="B" Description="Display Objects" Id="972555510-40157"/>
+</MaxHotkeyTransformations>
