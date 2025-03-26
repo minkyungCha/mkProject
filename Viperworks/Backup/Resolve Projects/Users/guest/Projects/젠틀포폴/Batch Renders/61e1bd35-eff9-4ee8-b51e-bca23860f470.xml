@@ -47,7 +47,7 @@
  <FolderName/>
  <SessionName>호라이즌워커</SessionName>
  <CreationTime>Wed Mar 26 00:57:56 2025</CreationTime>
- <Status>READY</Status>
+ <Status>COMPLETE</Status>
  <RecordSpeed>0</RecordSpeed>
  <UsePrefixAndSuffixFromSrc>0</UsePrefixAndSuffixFromSrc>
  <UseCommercialWorkflow>0</UseCommercialWorkflow>
@@ -63,7 +63,7 @@
  <RecordInfoName/>
  <VersionIdList/>
  <VersionNameList/>
- <CompletionPercentage>0</CompletionPercentage>
+ <CompletionPercentage>100</CompletionPercentage>
  <RecordSlatePreset>Same as project</RecordSlatePreset>
  <AdditionalOutputFormats/>
  <RecordAudioEnabled>true</RecordAudioEnabled>
@@ -147,7 +147,7 @@
  <UseRenderCachedImagesForRecording>false</UseRenderCachedImagesForRecording>
  <TgtSysId>None</TgtSysId>
  <CurSysId/>
- <TimeTakenToRenderInMs>0</TimeTakenToRenderInMs>
+ <TimeTakenToRenderInMs>31362</TimeTakenToRenderInMs>
  <EstimatedTimeRemainingInMs>0</EstimatedTimeRemainingInMs>
  <ErrorCode>0</ErrorCode>
  <ErrorStr/>
